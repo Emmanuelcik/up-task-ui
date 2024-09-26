@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Logo from "../componentes/Logo";
+import Logo from "@/components/Logo";
 
 const AppLayout = () => {
   return (
