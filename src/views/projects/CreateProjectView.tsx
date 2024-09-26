@@ -1,0 +1,49 @@
+import ProjectForm from "@/components/Projects/ProjectForm";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+const CreateProjectView = () => {
+  const initialValues = {
+    projectName: "",
+    clientName: "",
+    description: "",
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ defaultValues: initialValues });
+
+  const handleFormSubmit = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      <h1 className="text-5xl font-black">New Project</h1>
+      <p className="text-2xl font-light text-gray-500">Create a New Project</p>
+      <nav className="my-5">
+        <Link
+          className="bg-purple-400 hover:bg-purple-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
+          to="/"
+        >
+          back to projects
+        </Link>
+      </nav>
+
+      <form
+        className="mt-10 bg-white shadow-lg p-10 rounded-lg"
+        onSubmit={handleSubmit(handleFormSubmit)}
+        noValidate
+      >
+        <ProjectForm errors={errors} register={register} />
+        <input
+          type="submit"
+          value="Create Project"
+          className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
+        />
+      </form>
+    </div>
+  );
+};
+
+export default CreateProjectView;
