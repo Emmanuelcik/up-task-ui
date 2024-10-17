@@ -61,3 +61,14 @@ export const updateProject = async ({
     }
   }
 };
+export const deleteProject = async (projectId: Project["_id"]) => {
+  try {
+    const { data } = await api.delete<string>(`/projects/${projectId}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.message);
+    }
+  }
+};
