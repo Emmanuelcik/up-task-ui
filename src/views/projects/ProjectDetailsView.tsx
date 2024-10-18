@@ -1,5 +1,6 @@
 import { getProjectById } from "@/api/ProjectAPI";
 import AddTaskModal from "@/components/Tasks/AddTaskModal";
+import TasksList from "@/components/Tasks/TasksList";
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
@@ -33,7 +34,7 @@ const ProjectDetailsView = () => {
             Add New Task
           </button>
         </nav>
-
+        <TasksList tasks={data.tasks} />
         <AddTaskModal />
       </>
     );

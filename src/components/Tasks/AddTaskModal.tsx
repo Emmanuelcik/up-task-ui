@@ -6,10 +6,13 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import TaskForm from "./TaskForm";
 import { TaskFormData } from "@/types/index";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { createTask } from "@/api/TaskApi";
+import { toast } from "react-toastify";
 
 export default function AddTaskModal() {
   const navigate = useNavigate();
@@ -18,6 +21,8 @@ export default function AddTaskModal() {
   const modalTask = queryParams.get("newTask");
   const show = !!modalTask;
 
+  const params = useParams();
+  const projectId = params.projectId!;
   const initialValues: TaskFormData = {
     name: "",
     description: "",
@@ -26,11 +31,28 @@ export default function AddTaskModal() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
+  const { mutate } = useMutation({
+    mutationFn: createTask,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      toast.success("Task Created Successfully");
+      navigate(location.pathname, { replace: true });
+      reset();
+    },
+  });
+
   const handleCreateTask = (formData: TaskFormData) => {
-    console.log(formData);
+    const data = {
+      formData,
+      projectId,
+    };
+    mutate(data);
   };
   return (
     <Transition appear show={show} as={Fragment}>
