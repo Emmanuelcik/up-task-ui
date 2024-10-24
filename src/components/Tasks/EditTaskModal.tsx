@@ -6,64 +6,58 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import TaskForm from "./TaskForm";
-import { TaskFormData } from "@/types/index";
+import { useNavigate, useParams } from "react-router-dom";
+import { Task, TaskFormData } from "@/types/index";
 import { useForm } from "react-hook-form";
+import TaskForm from "./TaskForm";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createTask } from "@/api/TaskApi";
+import { updateTask } from "@/api/TaskApi";
 import { toast } from "react-toastify";
 
-export default function AddTaskModal() {
+type EditTaskModalProps = {
+  data: Task;
+  taskId: Task["_id"];
+};
+export default function EditTaskModal({ data, taskId }: EditTaskModalProps) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const modalTask = queryParams.get("newTask");
-  const show = !!modalTask;
-
+  const queryClient = useQueryClient();
   const params = useParams();
   const projectId = params.projectId!;
-  const initialValues: TaskFormData = {
-    name: "",
-    description: "",
-  };
-
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ defaultValues: initialValues });
+  } = useForm<TaskFormData>({
+    defaultValues: { name: data.name, description: data.description },
+  });
 
-  const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: createTask,
-    onError: (error) => {
-      toast.error(error.message);
+    mutationFn: updateTask,
+    onError: (err) => {
+      toast.error(err.message);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
-      toast.success("Task Created Successfully");
+      toast.success("Taks Updated Successfully");
       navigate(location.pathname, { replace: true });
       reset();
     },
   });
-
-  const handleCreateTask = (formData: TaskFormData) => {
+  const handleEditTask = (formData: TaskFormData) => {
     const data = {
       formData,
+      taskId,
       projectId,
     };
     mutate(data);
   };
   return (
-    <Transition appear show={show} as={Fragment}>
+    <Transition appear show={true} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
-        onClose={() => {
-          navigate(location.pathname, { replace: true });
-        }}
+        onClose={() => navigate(location.pathname, { replace: true })}
       >
         <TransitionChild
           as={Fragment}
@@ -90,23 +84,24 @@ export default function AddTaskModal() {
             >
               <DialogPanel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all p-16">
                 <DialogTitle as="h3" className="font-black text-4xl  my-5">
-                  New Task
+                  Edit Task
                 </DialogTitle>
 
                 <p className="text-xl font-bold">
-                  Fill the form and create {""}
-                  <span className="text-fuchsia-600">a new task</span>
+                  Modify your task as needed {""}
+                  <span className="text-fuchsia-600">using this form</span>
                 </p>
+
                 <form
                   className="mt-10 space-y-3"
                   noValidate
-                  onSubmit={handleSubmit(handleCreateTask)}
+                  onSubmit={handleSubmit(handleEditTask)}
                 >
-                  <TaskForm register={register} errors={errors} />
+                  <TaskForm errors={errors} register={register} />
                   <input
                     type="submit"
-                    value="Save Task"
-                    className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
+                    className=" bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3  text-white font-black  text-xl cursor-pointer"
+                    value="Guardar Tarea"
                   />
                 </form>
               </DialogPanel>
