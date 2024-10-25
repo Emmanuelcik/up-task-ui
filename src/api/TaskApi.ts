@@ -1,4 +1,4 @@
-import { Project, Task, TaskFormData } from "@/types/index";
+import { Project, Task, TaskFormData, taskSchema } from "@/types/index";
 import api from "@/lib/axios";
 import { isAxiosError } from "axios";
 
@@ -28,7 +28,10 @@ export const getTaskById = async ({
   try {
     const url = `projects/${projectId}/tasks/${taskId}`;
     const { data } = await api(url);
-    return data;
+    const response = taskSchema.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
