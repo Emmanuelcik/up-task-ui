@@ -9,6 +9,8 @@ export const taskStatusSchema = z.enum([
   "UNDER_REVIEW",
   "COMPLETED",
 ]);
+
+export type TaskStatus = z.infer<typeof taskStatusSchema>;
 export const taskSchema = z.object({
   _id: z.string(),
   name: z.string(),

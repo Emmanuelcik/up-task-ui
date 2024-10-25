@@ -12,10 +12,12 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getTaskById } from "@/api/TaskApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getTaskById, updateTaskStatus } from "@/api/TaskApi";
 import { toast } from "react-toastify";
 import { formatDate } from "@/utils/utils";
+import { statusTranslations } from "@/locales/en";
+import { TaskStatus } from "@/types/index";
 
 export default function TaskModalDetails() {
   const location = useLocation();
@@ -32,6 +34,29 @@ export default function TaskModalDetails() {
     enabled: !!taskId,
     retry: false,
   });
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: updateTaskStatus,
+    onError: (err) => {
+      toast.error(err.message);
+    },
+    onSuccess: () => {
+      toast.success("Task status updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+      navigate(`/projects/${projectId}`);
+    },
+  });
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const status = e.target.value as TaskStatus;
+    const data = {
+      taskId,
+      status,
+      projectId,
+    };
+    mutate(data);
+  };
 
   if (isError) {
     toast.error(error.message, { toastId: "error" });
@@ -88,6 +113,20 @@ export default function TaskModalDetails() {
                   </p>
                   <div className="my-5 space-y-3">
                     <label className="font-bold">Status: {data.status}</label>
+                    <select
+                      className="w-full p-3 bg-white border border-gray-300"
+                      defaultValue={data.status}
+                      onChange={handleStatusChange}
+                    >
+                      {Object.entries(statusTranslations).map((status) => {
+                        const [key, value] = status;
+                        return (
+                          <option key={key} value={key}>
+                            {value}
+                          </option>
+                        );
+                      })}
+                    </select>
                   </div>
                 </DialogPanel>
               </TransitionChild>
