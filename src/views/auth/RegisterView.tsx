@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
 import { UserRegistrationForm } from "@/types/index";
 import ErrorMessage from "@/components/ErrorMessage";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { createAccount } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
 export default function RegisterView() {
   const initialValues: UserRegistrationForm = {
@@ -10,6 +13,7 @@ export default function RegisterView() {
     password: "",
     password_confirmation: "",
   };
+  const navigate = useNavigate();
 
   const {
     register,
@@ -21,7 +25,20 @@ export default function RegisterView() {
 
   const password = watch("password");
 
-  const handleRegister = (formData: UserRegistrationForm) => {};
+  const { mutate } = useMutation({
+    mutationFn: createAccount,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      toast.success(data);
+      reset();
+      navigate("/auth/confirm-account");
+    },
+  });
+  const handleRegister = (formData: UserRegistrationForm) => {
+    mutate(formData);
+  };
 
   return (
     <>
@@ -57,7 +74,7 @@ export default function RegisterView() {
         </div>
 
         <div className="flex flex-col gap-5">
-          <label className="font-normal text-2xl">Nombre</label>
+          <label className="font-normal text-2xl">Name</label>
           <input
             type="name"
             placeholder="Nombre de Registro"
@@ -90,7 +107,7 @@ export default function RegisterView() {
         </div>
 
         <div className="flex flex-col gap-5">
-          <label className="font-normal text-2xl">Repetir Password</label>
+          <label className="font-normal text-2xl">Repeat your Password</label>
 
           <input
             id="password_confirmation"

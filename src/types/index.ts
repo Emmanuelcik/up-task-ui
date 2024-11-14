@@ -7,15 +7,17 @@ const authSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(255),
   password_confirmation: z.string().min(8).max(255),
+  token: z.string().min(6),
 });
 
 export type Auth = z.infer<typeof authSchema>;
-
 export type UserLoginForm = Pick<Auth, "email" | "password">;
 export type UserRegistrationForm = Pick<
   Auth,
   "name" | "email" | "password" | "password_confirmation"
 >;
+export type RequestConfirmationCodeForm = Pick<Auth, "email">;
+export type ConfirmToken = Pick<Auth, "token">;
 
 /** Tasks */
 
