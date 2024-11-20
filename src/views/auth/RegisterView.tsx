@@ -42,10 +42,10 @@ export default function RegisterView() {
 
   return (
     <>
-      <h1 className="text-5xl font-black text-white">Crear Cuenta</h1>
+      <h1 className="text-5xl font-black text-white">Create Account</h1>
       <p className="text-2xl font-light text-white mt-5">
-        Llena el formulario para {""}
-        <span className=" text-fuchsia-500 font-bold"> crear tu cuenta</span>
+        Fill the form to {""}
+        <span className=" text-fuchsia-500 font-bold"> create an account</span>
       </p>
 
       <form
@@ -60,10 +60,10 @@ export default function RegisterView() {
           <input
             id="email"
             type="email"
-            placeholder="Email de Registro"
+            placeholder="Email"
             className="w-full p-3  border-gray-300 border"
             {...register("email", {
-              required: "El Email de registro es obligatorio",
+              required: "Email is required",
               pattern: {
                 value: /\S+@\S+\.\S+/,
                 message: "E-mail no válido",
@@ -77,10 +77,10 @@ export default function RegisterView() {
           <label className="font-normal text-2xl">Name</label>
           <input
             type="name"
-            placeholder="Nombre de Registro"
+            placeholder="Name"
             className="w-full p-3  border-gray-300 border"
             {...register("name", {
-              required: "El Nombre de usuario es obligatorio",
+              required: "User name is required",
             })}
           />
           {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
@@ -91,13 +91,13 @@ export default function RegisterView() {
 
           <input
             type="password"
-            placeholder="Password de Registro"
+            placeholder="Password"
             className="w-full p-3  border-gray-300 border"
             {...register("password", {
-              required: "El Password es obligatorio",
+              required: "Password is required",
               minLength: {
                 value: 8,
-                message: "El Password debe ser mínimo de 8 caracteres",
+                message: "Password must be at least 8 characters",
               },
             })}
           />
@@ -112,12 +112,11 @@ export default function RegisterView() {
           <input
             id="password_confirmation"
             type="password"
-            placeholder="Repite Password de Registro"
+            placeholder="Confirm your password"
             className="w-full p-3  border-gray-300 border"
             {...register("password_confirmation", {
-              required: "Repetir Password es obligatorio",
-              validate: (value) =>
-                value === password || "Los Passwords no son iguales",
+              required: "Password confirmation is required",
+              validate: (value) => value === password || "Password don't match",
             })}
           />
 

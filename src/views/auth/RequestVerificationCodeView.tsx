@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { RequestConfirmationCodeForm } from "../../types";
 import ErrorMessage from "@/components/ErrorMessage";
@@ -10,6 +10,7 @@ export default function RegisterView() {
   const initialValues: RequestConfirmationCodeForm = {
     email: "",
   };
+  const navigate = useNavigate();
 
   const {
     register,
@@ -25,6 +26,8 @@ export default function RegisterView() {
     },
     onSuccess: (data) => {
       toast.success(data);
+      reset();
+      navigate("/auth/confirm-account");
     },
   });
   const handleRequestCode = (formData: RequestConfirmationCodeForm) =>

@@ -2,6 +2,9 @@ import { useForm } from "react-hook-form";
 import { UserLoginForm } from "@/types/index";
 import ErrorMessage from "@/components/ErrorMessage";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { authenticateUser } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
 export default function LoginView() {
   const initialValues: UserLoginForm = {
@@ -14,13 +17,28 @@ export default function LoginView() {
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
-  const handleLogin = (formData: UserLoginForm) => {};
+  const { mutate } = useMutation({
+    mutationFn: authenticateUser,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      toast.success(data);
+    },
+  });
+
+  const handleLogin = (formData: UserLoginForm) => mutate(formData);
 
   return (
     <>
+      <h1 className="text-5xl font-black text-white">Sign In</h1>
+      <p className="text-2xl font-light text-white mt-5">
+        Sign in using {""}
+        <span className=" text-fuchsia-500 font-bold"> yout creedentials</span>
+      </p>
       <form
         onSubmit={handleSubmit(handleLogin)}
-        className="space-y-8 p-10 bg-white"
+        className="space-y-8 p-10 bg-white mt-10"
         noValidate
       >
         <div className="flex flex-col gap-5">
@@ -29,10 +47,10 @@ export default function LoginView() {
           <input
             id="email"
             type="email"
-            placeholder="Email de Registro"
+            placeholder="Email"
             className="w-full p-3  border-gray-300 border"
             {...register("email", {
-              required: "El Email es obligatorio",
+              required: "Email is required",
               pattern: {
                 value: /\S+@\S+\.\S+/,
                 message: "E-mail no válido",
@@ -47,10 +65,10 @@ export default function LoginView() {
 
           <input
             type="password"
-            placeholder="Password de Registro"
+            placeholder="Password"
             className="w-full p-3  border-gray-300 border"
             {...register("password", {
-              required: "El Password es obligatorio",
+              required: "Password is required",
             })}
           />
           {errors.password && (
@@ -60,7 +78,7 @@ export default function LoginView() {
 
         <input
           type="submit"
-          value="Iniciar Sesión"
+          value="Sign In"
           className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3  text-white font-black  text-xl cursor-pointer"
         />
       </form>
