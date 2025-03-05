@@ -22,8 +22,8 @@ export default function LoginView() {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: (data) => {
-      toast.success(data);
+    onSuccess: () => {
+      toast.success('Login successful');
     },
   });
 
@@ -34,7 +34,7 @@ export default function LoginView() {
       <h1 className="text-5xl font-black text-white">Sign In</h1>
       <p className="text-2xl font-light text-white mt-5">
         Sign in using {""}
-        <span className=" text-fuchsia-500 font-bold"> yout creedentials</span>
+        <span className=" text-fuchsia-500 font-bold"> your creedentials</span>
       </p>
       <form
         onSubmit={handleSubmit(handleLogin)}

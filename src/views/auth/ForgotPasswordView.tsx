@@ -39,7 +39,8 @@ export default function ForgotPasswordView() {
       <h1 className="text-5xl font-black text-white">Forgot Password?</h1>
       <p className="text-2xl font-light text-white mt-5">
         add your email to{""}
-        <span className=" text-fuchsia-500 font-bold"> Rest your password</span>
+
+        <span className=" text-fuchsia-500 font-bold"> Resrt your password</span>
       </p>
       <form
         onSubmit={handleSubmit(handleForgotPassword)}
@@ -68,7 +69,7 @@ export default function ForgotPasswordView() {
 
         <input
           type="submit"
-          value="Enviar Instrucciones"
+          value="Send Instructions"
           className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3  text-white font-black  text-xl cursor-pointer"
         />
       </form>
