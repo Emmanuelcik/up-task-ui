@@ -7,6 +7,7 @@ import {
   RequestConfirmationCodeForm,
   UserLoginForm,
   UserRegistrationForm,
+  userSchema,
 } from "./../types/index";
 
 export async function createAccount(formData: UserRegistrationForm) {
@@ -92,6 +93,23 @@ export async function updatePasswordWithToken({
     const url = `/auth/update-password/${token}`;
     const { data } = await api.post<string>(url, formData);
     return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function getAuthenticatedUserInfo() {
+  try {
+    const url = `/auth/user`;
+    const { data } = await api.get<string>(url);
+    const response = userSchema.safeParse(data);
+
+    console.log(response);
+    if (response.success) {
+      return response.data;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);
