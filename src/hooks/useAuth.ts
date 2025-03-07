@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["auth"],
+    queryKey: ["user"],
     queryFn: getAuthenticatedUserInfo,
     retry: 1,
     // onError: (error) => {

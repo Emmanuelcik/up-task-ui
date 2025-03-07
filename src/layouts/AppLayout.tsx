@@ -24,7 +24,7 @@ const AppLayout = () => {
               </Link>
             </div>
 
-            <MenuNav />
+            <MenuNav name={data.name} />
           </div>
         </header>
 
