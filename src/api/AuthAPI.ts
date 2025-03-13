@@ -106,7 +106,6 @@ export async function getAuthenticatedUserInfo() {
     const { data } = await api.get<string>(url);
     const response = userSchema.safeParse(data);
 
-    console.log(response);
     if (response.success) {
       return response.data;
     }

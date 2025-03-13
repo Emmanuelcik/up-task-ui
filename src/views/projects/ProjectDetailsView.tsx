@@ -4,7 +4,7 @@ import EditTaskData from "@/components/Tasks/EditTaskData";
 import TaskModalDetails from "@/components/Tasks/TaskModalDetails";
 import TasksList from "@/components/Tasks/TasksList";
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
 const ProjectDetailsView = () => {
   const params = useParams();
@@ -35,6 +35,13 @@ const ProjectDetailsView = () => {
           >
             Add New Task
           </button>
+
+          <Link
+            to={"team"}
+            className="bg-fuchsia-600 hover:bg-fuchsia-700 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
+          >
+            Team memebers
+          </Link>
         </nav>
         <TasksList tasks={data.tasks} />
         <AddTaskModal />
