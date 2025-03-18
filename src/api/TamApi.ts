@@ -40,10 +40,29 @@ export const addUserToProjectById = async ({ projectId, id }: AddUserType) => {
   }
 };
 
+type RemoveUserType = {
+  projectId: Project["_id"];
+  id: TeamMember["_id"];
+};
+export const removeUserToProjectById = async ({
+  projectId,
+  id,
+}: RemoveUserType) => {
+  try {
+    const url = `/projects/${projectId}/team/${id}`;
+    const { data } = await api.delete(url);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+};
+
 export const getPtojectTeam = async (projectId: Project["_id"]) => {
   try {
     const url = `/projects/${projectId}/team`;
-    const { data } = await api.get(url);
+    const { data } = await api.get<string>(url);
     const response = teamMembersSchema.safeParse(data);
     if (response.success) {
       return response.data;

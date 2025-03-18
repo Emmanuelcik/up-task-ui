@@ -1,6 +1,6 @@
 import { addUserToProjectById } from "@/api/TamApi";
 import { TeamMember } from "@/types/index";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,7 @@ type SearchResultsProps = {
 const SearchResults = ({ user, reset }: SearchResultsProps) => {
   const params = useParams();
   const projectId = params.projectId!;
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: addUserToProjectById,
     onError: (error) => {
@@ -19,6 +20,7 @@ const SearchResults = ({ user, reset }: SearchResultsProps) => {
     },
     onSuccess: (data) => {
       toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ["projectTeam", projectId] });
       reset();
     },
   });

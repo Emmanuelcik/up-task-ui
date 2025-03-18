@@ -1,4 +1,4 @@
-import { getPtojectTeam } from "@/api/TamApi";
+import { getPtojectTeam, removeUserToProjectById } from "@/api/TamApi";
 import AddMemberModal from "@/components/team/AddMemberModal";
 import { Project } from "@/types/index";
 import {
@@ -9,20 +9,32 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Fragment } from "react";
+import { toast } from "react-toastify";
 
 const ProjectTeamView = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const projectId: Project["_id"] = params.projectId;
+  const projectId: Project["_id"] = params.projectId ?? "";
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["projectTeam", projectId],
     queryFn: () => getPtojectTeam(projectId),
     retry: false,
     enabled: !!projectId,
+  });
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: removeUserToProjectById,
+    onSuccess: (data) => {
+      toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ["projectTeam", projectId] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   if (isLoading) return "loading...";
@@ -88,6 +100,9 @@ const ProjectTeamView = () => {
                       <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                         <MenuItem>
                           <button
+                            onClick={() =>
+                              mutate({ projectId, id: member._id })
+                            }
                             type="button"
                             className="block px-3 py-1 text-sm leading-6 text-red-500"
                           >
