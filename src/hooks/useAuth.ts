@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAuthenticatedUserInfo } from "@/api/AuthAPI";
-import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const { data, isError, isLoading } = useQuery({
