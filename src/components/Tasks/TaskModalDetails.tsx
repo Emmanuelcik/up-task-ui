@@ -111,6 +111,15 @@ export default function TaskModalDetails() {
                   <p className="text-lg text-slate-500 mb-2">
                     Description: {data.description}
                   </p>
+
+                  {data.completedBy && (
+                    <p>
+                      <span className="font-bold text-slate-600">
+                        Last Updated By:{" "}
+                      </span>
+                      {data.completedBy.name}
+                    </p>
+                  )}
                   <div className="my-5 space-y-3">
                     <label className="font-bold">Status: {data.status}</label>
                     <select

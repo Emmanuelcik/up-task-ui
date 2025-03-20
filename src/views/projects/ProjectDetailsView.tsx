@@ -6,6 +6,7 @@ import TasksList from "@/components/Tasks/TasksList";
 import { useAuth } from "@/hooks/useAuth";
 import { isManager } from "@/utils/policies";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
 const ProjectDetailsView = () => {
@@ -21,8 +22,10 @@ const ProjectDetailsView = () => {
     retry: false,
   });
 
+  const canEdit = useMemo(() => data?.manager === user?._id, [data, user]);
   if (isLoading || authLoading) return "Loading...";
   if (isError) return <Navigate to={"/404"} />;
+
   if (data && user) {
     return (
       <>
@@ -48,7 +51,7 @@ const ProjectDetailsView = () => {
             </Link>
           </nav>
         )}
-        <TasksList tasks={data.tasks} />
+        <TasksList tasks={data.tasks} canEdit={canEdit} />
         <AddTaskModal />
         <EditTaskData />
         <TaskModalDetails />

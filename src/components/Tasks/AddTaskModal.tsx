@@ -42,7 +42,7 @@ export default function AddTaskModal() {
       toast.error(error.message);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
       toast.success("Task Created Successfully");
       navigate(location.pathname, { replace: true });
       reset();
