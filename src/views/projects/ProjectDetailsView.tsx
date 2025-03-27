@@ -1,8 +1,8 @@
 import { getProjectById } from "@/api/ProjectAPI";
-import AddTaskModal from "@/components/Tasks/AddTaskModal";
-import EditTaskData from "@/components/Tasks/EditTaskData";
-import TaskModalDetails from "@/components/Tasks/TaskModalDetails";
-import TasksList from "@/components/Tasks/TasksList";
+import AddTaskModal from "@/components/tasks/AddTaskModal";
+import EditTaskData from "@/components/tasks/EditTaskData";
+import TaskModalDetails from "@/components/tasks/TaskModalDetails";
+import TasksList from "@/components/tasks/TasksList";
 import { useAuth } from "@/hooks/useAuth";
 import { isManager } from "@/utils/policies";
 import { useQuery } from "@tanstack/react-query";
