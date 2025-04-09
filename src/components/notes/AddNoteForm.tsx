@@ -1,7 +1,7 @@
 import { Note, NoteFormData, Project } from "@/types/index";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "@/api/NoteApi";
 import { toast } from "react-toastify";
 import { useLocation, useParams } from "react-router-dom";
@@ -24,6 +24,7 @@ const AddNoteForm = () => {
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: createNote,
     onError: (error) => {
@@ -31,6 +32,7 @@ const AddNoteForm = () => {
     },
     onSuccess: (data) => {
       toast.success(data);
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
     },
   });
   const handleAddNote = (formData: NoteFormData) => {
