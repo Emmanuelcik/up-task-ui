@@ -7,6 +7,7 @@ const authSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(255),
   password_confirmation: z.string().min(8).max(255),
+  current_password: z.string(),
   token: z.string().min(6),
 });
 
@@ -21,6 +22,10 @@ export type ConfirmToken = Pick<Auth, "token">;
 
 export type ForgotPasswordForm = Pick<Auth, "email">;
 export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;
+export type UpdateCurrentPasswordForm = Pick<
+  Auth,
+  "password" | "password_confirmation" | "current_password"
+>;
 
 /** Users */
 export const userSchema = authSchema
@@ -33,7 +38,7 @@ export const userSchema = authSchema
   });
 
 export type User = z.infer<typeof userSchema>;
-
+export type UserProfileForm = Pick<User, "name" | "email">;
 /** Notes */
 const noteSchema = z.object({
   _id: z.string(),
