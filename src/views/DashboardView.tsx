@@ -7,12 +7,12 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import { deleteProject, getProjects } from "@/api/ProjectAPI";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { getProjects } from "@/api/ProjectAPI";
+import { useQuery } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { isManager } from "@/utils/policies";
+import DeleteProjectModal from "@/components/profile/DeleteProjectModal";
 
 const DashboardView = () => {
   const { data: user, isLoading: authLoading } = useAuth();
@@ -21,15 +21,8 @@ const DashboardView = () => {
     queryFn: getProjects,
   });
 
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: deleteProject,
-    onError: () => {},
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-      toast.success(data);
-    },
-  });
+  const navigate = useNavigate();
+
 
   if (isLoading || authLoading) {
     return "loading...";
@@ -133,9 +126,12 @@ const DashboardView = () => {
                               <button
                                 type="button"
                                 className="block px-3 py-1 text-sm leading-6 text-red-500"
-                                onClick={() => {
-                                  mutate(project._id);
-                                }}
+                                onClick={() =>
+                                  navigate(
+                                    location.pathname +
+                                      `?deleteProject=${project._id}`
+                                  )
+                                }
                               >
                                 Remove Project
                               </button>
@@ -150,6 +146,7 @@ const DashboardView = () => {
             ))}
           </ul>
         )}
+        <DeleteProjectModal />
       </>
     );
 };
