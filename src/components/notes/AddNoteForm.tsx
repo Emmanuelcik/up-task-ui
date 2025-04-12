@@ -1,4 +1,4 @@
-import { Note, NoteFormData, Project } from "@/types/index";
+import { NoteFormData, Project } from "@/types/index";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

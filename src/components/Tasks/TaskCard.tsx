@@ -1,5 +1,5 @@
 import { deleteTask } from "@/api/TaskApi";
-import { Task } from "@/types/index";
+import { TaskProject } from "@/types/index";
 import {
   Menu,
   MenuButton,
@@ -15,7 +15,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { toast } from "react-toastify";
 
 type TaskCardProps = {
-  task: Task;
+  task: TaskProject;
   canEdit: boolean;
 };
 const TaskCard = ({ task, canEdit }: TaskCardProps) => {
